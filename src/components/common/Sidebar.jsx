@@ -15,8 +15,7 @@ import {
   X,
 } from 'lucide-react';
 
-const Sidebar = ({ onClose, isMobileOpen }) => {
-  const [collapsed, setCollapsed] = useState(false);
+const Sidebar = ({ onClose, isMobileOpen, collapsed, onToggleCollapse }) => {
   const [activeHover, setActiveHover] = useState(null);
   const [activeGlow, setActiveGlow] = useState(false);
   const [logoutHover, setLogoutHover] = useState(false);
@@ -107,13 +106,9 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
     }
   };
 
-  const toggleCollapse = () => {
-    setCollapsed(!collapsed);
-  };
-
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* Mobile Overlay with animation */}
       {isMobileOpen && (
         <div 
           className="lg:hidden fixed inset-0 bg-gradient-to-br from-gray-900/70 via-gray-800/60 to-gray-900/70 backdrop-blur-sm z-40 transition-opacity duration-300"
@@ -121,18 +116,25 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
         />
       )}
 
-      {/* Sidebar Container */}
-      <aside className={`
-        fixed lg:sticky top-0 left-0 z-40 h-screen transition-all duration-300 ease-in-out
-        ${collapsed ? 'w-16 sm:w-20' : 'w-64 sm:w-72'}
-        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900
-        border-r border-gray-700/50
-        shadow-xl
-        overflow-y-auto
-        ${collapsed ? 'overflow-x-hidden' : ''}
-        scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent
-      `}>
+      {/* Sidebar Container with animations */}
+      <aside 
+        className={`
+          fixed top-0 left-0 h-screen transition-all duration-300 ease-in-out
+          ${collapsed ? 'w-16 sm:w-20' : 'w-64 sm:w-72'}
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900
+          border-r border-gray-700/50
+          shadow-xl
+          overflow-y-auto
+          ${collapsed ? 'overflow-x-hidden' : ''}
+          /* Hide scrollbar */
+          [&::-webkit-scrollbar]:hidden
+          [-ms-overflow-style:none]
+          [scrollbar-width:none]
+          /* Z-index: Sidebar should be ABOVE navbar */
+          z-50
+        `}
+      >
         
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -164,7 +166,7 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
                 )}
               </div>
               
-              {/* Mobile Close Button */}
+              {/* Mobile Close Button with animation */}
               <button
                 onClick={onClose}
                 className="lg:hidden flex items-center justify-center h-8 w-8 rounded-lg 
@@ -174,9 +176,9 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
                 <X className="h-4 w-4 text-gray-300" />
               </button>
               
-              {/* Desktop Collapse Toggle */}
+              {/* Desktop Collapse Toggle with animation */}
               <button
-                onClick={toggleCollapse}
+                onClick={onToggleCollapse}
                 className={`hidden lg:flex items-center justify-center h-8 w-8 rounded-lg 
                   bg-gray-800/50 hover:bg-gray-700/50 border border-gray-700/50
                   transition-all duration-300 transform hover:scale-110 hover:border-blue-500/50
@@ -187,8 +189,9 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
             </div>
           </div>
 
-          {/* Navigation Menu */}
-          <nav className="flex-1 p-3 sm:p-4 space-y-1 overflow-y-auto">
+          {/* Navigation Menu with animations */}
+          <nav className="flex-1 p-3 sm:p-4 space-y-1 overflow-y-auto 
+            [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className={`text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-2 ${collapsed ? 'text-center' : ''}`}>
               {!collapsed ? 'Main Menu' : '•••'}
             </div>
@@ -214,7 +217,7 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
                     transform ${activeHover === item.path && !isActive ? 'translate-x-1' : ''}
                   `}
                 >
-                  {/* Icon */}
+                  {/* Icon with animation */}
                   <div className={`
                     relative flex-shrink-0 transform transition-all duration-300
                     ${isActive 
@@ -240,7 +243,7 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
                     </span>
                   )}
                   
-                  {/* Badge */}
+                  {/* Badge with animation */}
                   {item.badge && !collapsed && (
                     <span className={`
                       ml-2 px-2 py-0.5 text-xs font-semibold rounded-full flex-shrink-0
@@ -254,7 +257,7 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
                     </span>
                   )}
                   
-                  {/* Tooltip for Collapsed State */}
+                  {/* Tooltip for Collapsed State with animation */}
                   {collapsed && (
                     <div className="absolute left-full ml-3 px-3 py-2 
                           bg-gray-900/95 backdrop-blur-sm text-white text-sm rounded-lg 
@@ -273,7 +276,7 @@ const Sidebar = ({ onClose, isMobileOpen }) => {
             })}
           </nav>
 
-          {/* Footer Section */}
+          {/* Footer Section with animations */}
           <div className="p-3 sm:p-4 border-t border-gray-700/50 space-y-4">
             {/* User Profile */}
             <div className={`flex items-center ${collapsed ? 'justify-center' : 'space-x-3'}`}>
